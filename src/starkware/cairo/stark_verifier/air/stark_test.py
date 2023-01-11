@@ -14,7 +14,8 @@ PROOF_FILE = os.path.join(os.path.dirname(__file__), "example_proof.json")
 
 def get_program_for_layout(layout: str) -> Program:
     return compile_cairo_files(
-        [os.path.join(os.path.dirname(__file__), f"layouts/{layout}/verify.cairo")],
+        [os.path.join(os.path.dirname(__file__),
+                      f"layouts/{layout}/verify.cairo")],
         prime=DEFAULT_PRIME,
         debug_info=True,
         main_scope=ScopedName.from_string(
@@ -26,8 +27,10 @@ def get_program_for_layout(layout: str) -> Program:
 def run_test(proof_file: str, layout: str):
     with open(proof_file, "r") as fp:
         proof_json = json.load(fp)
+    # print(proof_json)
     program = get_program_for_layout(layout)
     proof = parse_proof(identifiers=program.identifiers, proof_json=proof_json)
+    print(proof)
 
     runner = CairoFunctionRunner(program, layout="small")
     runner.run(
@@ -46,4 +49,8 @@ def run_test(proof_file: str, layout: str):
 
 
 def test_stark():
+    print("testing stark")
     run_test(proof_file=PROOF_FILE, layout="recursive")
+
+
+test_stark()
